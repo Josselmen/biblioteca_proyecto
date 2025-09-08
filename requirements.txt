@@ -1,5 +1,4 @@
 Django>=4.2
 gunicorn
 PyMySQL
-      # o PyMySQL como plan B (ver más abajo)
 whitenoise
