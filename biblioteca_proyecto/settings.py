@@ -1,13 +1,15 @@
 import os
 from pathlib import Path
+import dj_database_url  # <-- necesitas instalarlo con pip install dj-database-url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-tu-clave-secreta-aqui-cambiar-en-produccion'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-clave-temporal')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+# Railway genera un dominio dinámico
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -49,18 +51,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'biblioteca_proyecto.wsgi.application'
 
+# Railway pasa la URL de la BD en DATABASE_URL
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'biblioteca_db',
-        'USER': 'root',  # Cambia por tu usuario de MySQL
-        'PASSWORD': '77736706',  # Cambia por tu contraseña de MySQL
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        },
-    }
+    'default': dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -84,6 +81,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"  # para producción
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
