@@ -49,17 +49,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'biblioteca_proyecto.wsgi.application'
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get("MYSQLDATABASE", "railway"),
-        'USER': os.environ.get("MYSQLUSER", "root"),
-        'PASSWORD': os.environ.get("MYSQLPASSWORD", ""),
-        'HOST': os.environ.get("MYSQLHOST", "mysql.railway.internal"),
-        'PORT': os.environ.get("MYSQLPORT", "3306"),
-    }
-}
 
+DATABASES = {
+    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
