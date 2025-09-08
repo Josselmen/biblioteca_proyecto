@@ -1,14 +1,13 @@
 import os
 from pathlib import Path
-import dj_database_url  # <-- necesitas instalarlo con pip install dj-database-url
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-clave-temporal')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-temporal')
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-# Railway genera un dominio dinámico
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
@@ -50,29 +49,23 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'biblioteca_proyecto.wsgi.application'
-
-# Railway pasa la URL de la BD en DATABASE_URL
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=True
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get("MYSQLDATABASE", "railway"),
+        'USER': os.environ.get("MYSQLUSER", "root"),
+        'PASSWORD': os.environ.get("MYSQLPASSWORD", ""),
+        'HOST': os.environ.get("MYSQLHOST", "localhost"),
+        'PORT': os.environ.get("MYSQLPORT", "3306"),
+    }
 }
 
+
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
 LANGUAGE_CODE = 'es-es'
@@ -81,9 +74,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"  # para producción
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
