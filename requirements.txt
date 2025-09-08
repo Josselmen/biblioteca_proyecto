@@ -1,4 +1,5 @@
 Django>=4.2
 gunicorn
-mysqlclient      # o PyMySQL como plan B (ver más abajo)
+PyMySQL
+      # o PyMySQL como plan B (ver más abajo)
 whitenoise
