@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Categorías - Sistema de Biblioteca{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-tags"></i> Categorías</h2>
+    <a href="{% url 'agregar_categoria' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Agregar Categoría
+    </a>
+</div>
+
+{% if categorias %}
+<div class="row">
+    {% for categoria in categorias %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ categoria.nombre }}</h5>
+                <p class="card-text">{{ categoria.descripcion|default:"Sin descripción" }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                        <i class="fas fa-book"></i> {{ categoria.total_libros }} libro{{ categoria.total_libros|pluralize }}
+                    </small>
+                    <a href="{% url 'lista_libros' %}?categoria={{ categoria.id }}" class="btn btn-sm btn-outline-primary">
+                        Ver libros
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info text-center">
+    <i class="fas fa-info-circle"></i>
+    No hay categorías registradas.
+    <a href="{% url 'agregar_categoria' %}" class="btn btn-sm btn-primary ms-2">
+        Crear la primera categoría
+    </a>
+</div>
+{% endif %}
+{% endblock %}

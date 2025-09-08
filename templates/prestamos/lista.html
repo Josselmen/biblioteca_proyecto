@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Préstamos - Sistema de Biblioteca{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-exchange-alt"></i> Lista de Préstamos</h2>
+    <a href="{% url 'agregar_prestamo' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Nuevo Préstamo
+    </a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <form method="get">
+            <select name="estado" class="form-select" onchange="this.form.submit()">
+                <option value="">Todos los estados</option>
+                <option value="prestado" {% if estado_seleccionado == 'prestado' %}selected{% endif %}>
+                    Prestados
+                </option>
+                <option value="devuelto" {% if estado_seleccionado == 'devuelto' %}selected{% endif %}>
+                    Devueltos
+                </option>
+                <option value="vencido" {% if estado_seleccionado == 'vencido' %}selected{% endif %}>
+                    Vencidos
+                </option>
+            </select>
+        </form>
+    </div>
+    <div class="col-md-8">
+        <div class="btn-group btn-group-sm" role="group">
+            <a href="?estado=prestado" class="btn btn-outline-warning">
+                <i class="fas fa-clock"></i> Prestados
+            </a>
+            <a href="?estado=devuelto" class="btn btn-outline-success">
+                <i class="fas fa-check"></i> Devueltos
+            </a>
+            <a href="?" class="btn btn-outline-secondary">
+                <i class="fas fa-list"></i> Todos
+            </a>
+        </div>
+    </div>
+</div>
+
+{% if prestamos %}
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Libro</th>
+                <th>Usuario</th>
+                <th>Fecha Préstamo</th>
+                <th>Fecha Esperada</th>
+                <th>Fecha Devolución</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for prestamo in prestamos %}
+            <tr {% if prestamo.esta_vencido and prestamo.estado == 'prestado' %}class="table-warning"{% endif %}>
+                <td>
+                    <a href="{% url 'detalle_libro' prestamo.libro.id %}" class="text-decoration-none">
+                        <strong>{{ prestamo.libro.titulo }}</strong>
+                    </a>
+                    <br>
+                    <small class="text-muted">{{ prestamo.libro.autor }}</small>
+                </td>
+                <td>
+                    <strong>{{ prestamo.usuario.nombre }} {{ prestamo.usuario.apellido }}</strong>
+                    <br>
+                    <small class="text-muted">{{ prestamo.usuario.email }}</small>
+                </td>
+                <td>{{ prestamo.fecha_prestamo|date:"d/m/Y H:i" }}</td>
+                <td>
+                    {{ prestamo.fecha_devolucion_esperada|date:"d/m/Y" }}
+                    {% if prestamo.esta_vencido and prestamo.estado == 'prestado' %}
+                        <br><small class="text-danger">¡Vencido!</small>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if prestamo.fecha_devolucion_real %}
+                        {{ prestamo.fecha_devolucion_real|date:"d/m/Y H:i" }}
+                    {% else %}
+                        <span class="text-muted">Pendiente</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if prestamo.estado == 'prestado' %}
+                        {% if prestamo.esta_vencido %}
+                            <span class="badge bg-danger">Vencido</span>
+                        {% else %}
+                            <span class="badge bg-warning">Prestado</span>
+                        {% endif %}
+                    {% elif prestamo.estado == 'devuelto' %}
+                        <span class="badge bg-success">Devuelto</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if prestamo.estado == 'prestado' %}
+                        <a href="{% url 'devolver_libro' prestamo.id %}" 
+                           class="btn btn-sm btn-success"
+                           onclick="return confirm('¿Confirma la devolución de este libro?')">
+                            <i class="fas fa-undo"></i> Devolver
+                        </a>
+                    {% else %}
+                        <span class="text-muted">-</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% if prestamo.observaciones %}
+            <tr>
+                <td colspan="7" class="bg-light">
+                    <small><strong>Observaciones:</strong> {{ prestamo.observaciones }}</small>
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-3">
+    <small class="text-muted">
+        <i class="fas fa-info-circle"></i>
+        Las filas resaltadas en amarillo indican préstamos vencidos.
+        Total de préstamos mostrados: {{ prestamos.count }}
+    </small>
+</div>
+
+{% else %}
+<div class="alert alert-info text-center">
+    <i class="fas fa-info-circle"></i>
+    No hay préstamos registrados
+    {% if estado_seleccionado %}
+        con el estado "{{ estado_seleccionado }}".
+        <a href="{% url 'lista_prestamos' %}" class="btn btn-sm btn-outline-primary ms-2">
+            Ver todos los préstamos
+        </a>
+    {% else %}
+        en el sistema.
+        <a href="{% url 'agregar_prestamo' %}" class="btn btn-sm btn-primary ms-2">
+            Realizar el primer préstamo
+        </a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

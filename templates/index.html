@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Sistema de Biblioteca{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1><i class="fas fa-book"></i> Sistema de Biblioteca</h1>
+        <p class="lead">Gestión completa de libros, usuarios y préstamos</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Total Libros</h5>
+                        <h2>{{ total_libros }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-book fa-3x opacity-75"></i>
+                    </div>
+                </div>
+                <a href="{% url 'lista_libros' %}" class="btn btn-light btn-sm">Ver libros</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Usuarios Activos</h5>
+                        <h2>{{ total_usuarios }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-users fa-3x opacity-75"></i>
+                    </div>
+                </div>
+                <a href="{% url 'lista_usuarios' %}" class="btn btn-light btn-sm">Ver usuarios</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Préstamos Activos</h5>
+                        <h2>{{ prestamos_activos }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-exchange-alt fa-3x opacity-75"></i>
+                    </div>
+                </div>
+                <a href="{% url 'lista_prestamos' %}" class="btn btn-light btn-sm">Ver préstamos</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Préstamos Vencidos</h5>
+                        <h2>{{ prestamos_vencidos }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-exclamation-triangle fa-3x opacity-75"></i>
+                    </div>
+                </div>
+                <a href="{% url 'lista_prestamos' %}?estado=prestado" class="btn btn-light btn-sm">Ver detalles</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-plus"></i> Acciones Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'agregar_libro' %}" class="btn btn-primary">
+                        <i class="fas fa-book"></i> Agregar Nuevo Libro
+                    </a>
+                    <a href="{% url 'agregar_usuario' %}" class="btn btn-success">
+                        <i class="fas fa-user-plus"></i> Registrar Nuevo Usuario
+                    </a>
+                    <a href="{% url 'agregar_prestamo' %}" class="btn btn-info">
+                        <i class="fas fa-handshake"></i> Realizar Préstamo
+                    </a>
+                    <a href="{% url 'reportes' %}" class="btn btn-secondary">
+                        <i class="fas fa-chart-bar"></i> Ver Reportes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> Información del Sistema</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li><strong>Funciones disponibles:</strong></li>
+                    <li><i class="fas fa-check text-success"></i> Gestión de libros y categorías</li>
+                    <li><i class="fas fa-check text-success"></i> Registro de usuarios</li>
+                    <li><i class="fas fa-check text-success"></i> Control de préstamos y devoluciones</li>
+                    <li><i class="fas fa-check text-success"></i> Reportes estadísticos</li>
+                    <li><i class="fas fa-check text-success"></i> Búsqueda y filtros avanzados</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Reportes - Sistema de Biblioteca{% endblock %}
+
+{% block content %}
+<h2><i class="fas fa-chart-bar"></i> Reportes y Estadísticas</h2>
+
+<!-- Resumen general -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <h3>{{ total_libros }}</h3>
+                <p class="mb-0">Total de Libros</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <h3>{{ total_usuarios }}</h3>
+                <p class="mb-0">Total de Usuarios</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <h3>{{ prestamos_activos }}</h3>
+                <p class="mb-0">Préstamos Activos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body text-center">
+                <h3>{{ prestamos_vencidos }}</h3>
+                <p class="mb-0">Préstamos Vencidos</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Libros más populares -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-star"></i> Libros Más Prestados</h5>
+            </div>
+            <div class="card-body">
+                {% if libros_populares %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Autor</th>
+                                <th>Préstamos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for libro in libros_populares %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'detalle_libro' libro.id %}" class="text-decoration-none">
+                                        {{ libro.titulo }}
+                                    </a>
+                                </td>
+                                <td>{{ libro.autor }}</td>
+                                <td>
+                                    <span class="badge bg-primary">{{ libro.total_prestamos }}</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted text-center">No hay datos de préstamos aún.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Usuarios más activos -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-user-graduate"></i> Usuarios Más Activos</h5>
+            </div>
+            <div class="card-body">
+                {% if usuarios_activos %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Email</th>
+                                <th>Préstamos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usuario in usuarios_activos %}
+                            <tr>
+                                <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
+                                <td>{{ usuario.email }}</td>
+                                <td>
+                                    <span class="badge bg-success">{{ usuario.total_prestamos }}</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted text-center">No hay datos de préstamos aún.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Acciones rápidas -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-tools"></i> Acciones de Gestión</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'lista_prestamos' %}?estado=prestado" class="btn btn-warning btn-sm w-100">
+                            <i class="fas fa-clock"></i> Ver Préstamos Activos
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'lista_libros' %}" class="btn btn-primary btn-sm w-100">
+                            <i class="fas fa-book"></i> Gestionar Libros
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'lista_usuarios' %}" class="btn btn-success btn-sm w-100">
+                            <i class="fas fa-users"></i> Gestionar Usuarios
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'agregar_prestamo' %}" class="btn btn-info btn-sm w-100">
+                            <i class="fas fa-plus"></i> Nuevo Préstamo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Información adicional -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Resumen del Sistema</h6>
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <small class="text-muted">Total de transacciones:</small>
+                        <br><strong>{{ total_prestamos }}</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <small class="text-muted">Promedio préstamos por libro:</small>
+                        <br><strong>{% if total_libros > 0 %}{{ total_prestamos|floatformat:1 }}{% else %}0{% endif %}</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <small class="text-muted">Promedio préstamos por usuario:</small>
+                        <br><strong>{% if total_usuarios > 0 %}{{ total_prestamos|floatformat:1 }}{% else %}0{% endif %}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

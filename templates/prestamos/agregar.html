@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Nuevo Préstamo - Sistema de Biblioteca{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-handshake"></i> Registrar Nuevo Préstamo</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.usuario.id_for_label }}" class="form-label">Usuario *</label>
+                            {{ form.usuario }}
+                            {% if form.usuario.errors %}
+                                <div class="text-danger small">{{ form.usuario.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.libro.id_for_label }}" class="form-label">Libro *</label>
+                            {{ form.libro }}
+                            {% if form.libro.errors %}
+                                <div class="text-danger small">{{ form.libro.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.fecha_devolucion_esperada.id_for_label }}" class="form-label">
+                            Fecha de Devolución Esperada *
+                        </label>
+                        {{ form.fecha_devolucion_esperada }}
+                        {% if form.fecha_devolucion_esperada.errors %}
+                            <div class="text-danger small">{{ form.fecha_devolucion_esperada.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.observaciones.id_for_label }}" class="form-label">
+                            Observaciones
+                        </label>
+                        {{ form.observaciones }}
+                        {% if form.observaciones.errors %}
+                            <div class="text-danger small">{{ form.observaciones.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'lista_prestamos' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Volver
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Registrar Préstamo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-body">
+                <h6 class="card-title">Información importante</h6>
+                <ul class="list-unstyled small text-muted mb-0">
+                    <li>• Solo se muestran libros con ejemplares disponibles</li>
+                    <li>• Solo se muestran usuarios activos</li>
+                    <li>• La fecha por defecto es 15 días desde hoy</li>
+                    <li>• El préstamo reducirá automáticamente los ejemplares disponibles</li>
+                    <li>• Las observaciones son opcionales pero útiles para seguimiento</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
